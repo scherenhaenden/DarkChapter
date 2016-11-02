@@ -1,0 +1,47 @@
+ html
+ {
+   /*background:yellow;*/
+text-align: center;
+ }
+ img
+ {
+     /*height: 250px;*/
+     width: auto;
+     background-color: powderblue;
+ }
+#DragAndDropFilesZone
+{
+  margin: auto;
+  text-align: center;
+}
+
+.FotoEditingDialog * img
+{
+  max-height: 500px!important;
+}
+#ShowUpPics
+{
+  height: 600px;
+  overflow-y: scroll;
+}
+ .Previews
+ {
+   float: left;
+   height: 250px;
+   width: auto;
+   background-color: powderblue;
+ }
+ .FotoEditingDialog
+ {
+   width: auto !important;
+   height: auto;
+ }
+#mix
+{
+  width: 280px !important;
+}
+
+.DarkZone
+{
+  background-color:green;
+}
