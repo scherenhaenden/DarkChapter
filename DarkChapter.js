@@ -1,12 +1,23 @@
 
 /*
-ready
-
+ready block
 */
+var imgWater = new Image();
+var CanimgWater;
+  imgWater.crossOrigin = "anonymous";
+imgWater.onload = function ()
+{
+  CanimgWater = document.createElement('canvas');
+  CanimgWater.width = imgWater.width;
+  CanimgWater.height = imgWater.height;
+  var ContextSwap = CanimgWater.getContext("2d");
+  ContextSwap.drawImage(imgWater, 0, 0, imgWater.width, image.height);
+}
+imgWater.src =  "./Firma.png";
+
 $(document).ready(function(){
   SetDropZone();
 });
-
 
 function SetDropZone()
 {
@@ -53,29 +64,22 @@ function SetDropZone()
 
 function ProcessFiles(Files)
 {
-
-
-      if(Files && typeof FileReader !== "undefined")
+    if(Files && typeof FileReader !== "undefined")
 		{
 			//process each files only if browser is supported
+      $ImagesTobeEditedArray = [Files.length];
 			for(var i=0; i<Files.length; i++)
 			{
+
 				readFile(Files[i]);
 			}
 		} else {
 
 		}
-
-
-}
-function resolve() {
-    var h='d';
 }
 
 var readFile = function(file)
 	{
-
-
 		if( (/image/i).test(file.type) )
 		{
 			//define FileReader object
@@ -84,15 +88,13 @@ var readFile = function(file)
 			//init reader onload event handlers
 			reader.onload = function(e)
 			{
+
 				var image = $('<img/>')
 				.load(function()
 				{
-					//when image fully loaded
-					var newimageurl = getCanvasImage(this);
-
-				//createPreview(file, newimageurl);
-					//test(newimageurl);
-					//uploadToServer(file, dataURItoBlob(newimageurl),newimageurl);
+          image.crossOrigin = "anonymous";
+					getCanvasImage(this);
+          //LoadPreviews();
 				})
 				.attr('src', e.target.result);
 			};
@@ -107,27 +109,10 @@ var readFile = function(file)
 		}
 	}
 
+/*
+ready block
+*/
 
-function rxeadFile(file) {
-    var reader = new FileReader();
-    var deferred = $.Deferred();
-
-    reader.onload = function(event) {
-        deferred.resolve(event.target.result);
-    };
-
-    reader.onerror = function() {
-        deferred.reject(this);
-    };
-
-    if (/^image/.test(file.type)) {
-        reader.readAsDataURL(file);
-    } else {
-        reader.readAsText(file);
-    }
-
-    return deferred.promise();
-}
 
 function setpixelated(context){
     context['imageSmoothingEnabled'] = false;       /* standard */
@@ -141,34 +126,29 @@ function setpixelated(context){
 function ResizeFactory(image,quality)
 {
   //variableDynamic
-  var canvas5 = document.createElement('canvas');
-  canvas5.width = image.width*quality;
-  canvas5.height = image.height*quality;
-  var ctx5 = canvas5.getContext("2d");
-  ctx5.drawImage(image, 0, 0, image.width*quality, image.height*quality);
-  return canvas5;
+  var CanvasSwap = document.createElement('canvas');
+  CanvasSwap.width = image.width*quality;
+  CanvasSwap.height = image.height*quality;
+  var ContextSwap = CanvasSwap.getContext("2d");
+  ContextSwap.drawImage(image, 0, 0, image.width*quality, image.height*quality);
+  return CanvasSwap;
 }
-
-
-
+var iID=0;
+var $CanvasToBeUploadedSmall;
+var $CanvasToBeUploadedBig;
 var getCanvasImage = function(image) {
-    var SizeUp=1200;
+    var MaxUpFileImgeSize=1200;
     var SizePreview=300;
-
     var quality=0.5;
     var MaxDownresizing=0.5;
     var h = image.width;
     var t = image.height;
     var imageSwap=image;
-    var reste=new ImageSizeMax(image,SizeUp);
+    var reste=new ImageSizeMax(image,MaxUpFileImgeSize);
     reste.CalculateSize();
-    //$("#ShowUpPics").append(imageSwap);
-    //define canvas
+
     quality=1/reste.DiffTimes;
-
-    //this will be delivered
     var canvas6;
-
     var canvas6 = document.createElement('canvas');
     canvas6.width = image.width;
     canvas6.height = image.height;
@@ -181,7 +161,7 @@ var getCanvasImage = function(image) {
         quality=0.5;
       }
       canvas6=ResizeFactory(canvas6,quality);
-      var reste2=new ImageSizeMax(canvas6,SizeUp);
+      var reste2=new ImageSizeMax(canvas6,MaxUpFileImgeSize);
       reste2.CalculateSize();
       quality=1/reste2.DiffTimes;
 
@@ -194,11 +174,6 @@ var getCanvasImage = function(image) {
       {
         break;
       }
-
-
-
-
-
     }
 
     var canvas7 = document.createElement('canvas');
@@ -222,7 +197,6 @@ var getCanvasImage = function(image) {
 
       if(quality<1)
       {
-
         quality=1/reste2.DiffTimes;
       }
       else
@@ -232,48 +206,187 @@ var getCanvasImage = function(image) {
 
     }
 
-  //  canvas7
+
+
+    $CanvasToBeUploadedSmall=canvas7;
+    var IdOfCurrentObjectOnarray=$ImagesTobeEditedArray.length-1;
+    //var hhh=isNaN(IdOfCurrentObjectOnarray);
+    if(isNaN(IdOfCurrentObjectOnarray))
+    {
+      iID=0;
+    }
+    else
+    {
+      if(iID<IdOfCurrentObjectOnarray)
+      {
+        iID=IdOfCurrentObjectOnarray;
+      }
+
+    }
+    $CanvasToBeUploadedBig=canvas6;
+    var ImageSwapEditing= new ImagesTobeEdited(image);
+    ImageSwapEditing.CreateCanvasCouple(canvas7,canvas6);
+    ImageSwapEditing.CreateTempcanvas(canvas7,canvas6);
+    ImageSwapEditing.SetImageId(iID);
+    $ImagesTobeEditedArray[iID]=ImageSwapEditing;
 
 
 
+      var $CanvasWtSmall=$ImagesTobeEditedArray[iID].GetSmallCanvas();
+      var ctxWtSmall = $CanvasWtSmall.getContext("2d");
 
 
-  //canvasSharp=canvas7;
 
-       app(canvas7.toDataURL("image/jpeg"),canvas6.toDataURL("image/jpeg"));
+      var canvasWaterS = document.createElement('canvas');
+      canvasWaterS.width = imgWater.width;
+      canvasWaterS.height = imgWater.height;
+      var ctxWtS = canvasWaterS.getContext("2d");
+
+      var DownSamplingSmall=(($CanvasWtSmall.width/imgWater.width)*(0.2));
+    /*var toWidth=(imgWater.width*0.2);
+      var toHeight=(imgWater.height*(toWidth/imgWater.width));*/
+
+     ctxWtS.drawImage(imgWater, 0, 0,imgWater.width, imgWater.height);
+     var $ScanvasWaterS=ResizeFactory(canvasWaterS,DownSamplingSmall);
+
+     var toWidth=$ScanvasWaterS.width;
+     var toHeight=$ScanvasWaterS.height;
+
+      ctxWtSmall.drawImage($ScanvasWaterS,($CanvasWtSmall.width-toWidth), ($CanvasWtSmall.height-toHeight),toWidth, toHeight);
+
+
+      var $CanvasWtBig=$ImagesTobeEditedArray[iID].GetBigCanvas();
+      var ctxWtBig = $CanvasWtBig.getContext("2d");
+
+      var canvasWaterB = document.createElement('canvas');
+      canvasWaterB.width = imgWater.width;
+      canvasWaterB.height = imgWater.height;
+      var ctxWtB = canvasWaterB.getContext("2d");
+
+
+      var DownSamplingBig=(($CanvasWtBig.width/imgWater.width)*(0.2));
+      var $SCanvasWtBig=ResizeFactory(canvasWaterS,DownSamplingBig);
+      var toWidth=$SCanvasWtBig.width;
+      var toHeight=$SCanvasWtBig.height;
+      ctxWtBig.drawImage($SCanvasWtBig, ($CanvasWtBig.width-toWidth), ($CanvasWtBig.height-toHeight),toWidth, toHeight);
+
+      $ImagesTobeEditedArray[iID].CreateTempcanvas($CanvasWtSmall,$CanvasWtBig);
+
+
+
+       createPreviews(iID);
+       iID=(iID+1);
+
+
 		return canvas6.toDataURL("image/jpeg");
 	}
-//var canvasSharp;
 
-  /*var canvas = document.getElementById("non");
-      ctx = canvas.getContext("2d");
-      offScreen = document.createElement('canvas');
-      offctx = offScreen.getContext('2d');*/
 
-var iID=0;
-function app(drul, drul2)
+
+
+function LoadPreviews()
+{
+  for (var i = 0; i < $ImagesTobeEditedArray.lenght; i++)
+  {
+    createPreviews(i);
+  }
+}
+
+
+function createPreviews(id)
+{
+  var SrcSmall = $ImagesTobeEditedArray[id].GetTempSmallCanvas().toDataURL("image/jpeg");
+  var SrcBig = $ImagesTobeEditedArray[id].GetTempBigCanvas().toDataURL("image/jpeg");
+  var head = 'data:image/jpeg;base64,';
+  var imgFileSize = Math.round((SrcBig.length - head.length)*3/4) ;
+  var IdForImg="ImgPreview"+id;
+  var IdOfDiv="div"+id;
+  var IdOfImgPreview="editImgPreview"+id;
+
+  var ImageHTML=ImageHTMLForPreview(IdForImg,SrcSmall,imgFileSize);
+  var ImageHTMLBig=ImageHTMLForPreview(IdOfImgPreview,SrcBig,imgFileSize);
+  var DivHTML=DivHTMLForPreview(IdOfDiv,ImageHTML);
+  $('#'+IdOfDiv).remove('');
+  $("#ShowUpPics").append(DivHTML);
+  CreateDialogs(IdForImg,DivHTML,ImageHTMLBig,SrcBig);
+
+}
+function REcreatePreviews(id)
+{
+  var SrcSmall = $ImagesTobeEditedArray[id].GetTempSmallCanvas().toDataURL("image/jpeg");
+  var SrcBig = $ImagesTobeEditedArray[id].GetTempBigCanvas().toDataURL("image/jpeg");
+  var head = 'data:image/jpeg;base64,';
+  var imgFileSize = Math.round((SrcBig.length - head.length)*3/4) ;
+  var IdForImg="ImgPreview"+id;
+  var IdOfDiv="div"+id;
+  var IdOfImgPreview="editImgPreview"+id;
+
+  var ImageHTML=ImageHTMLForPreview(IdForImg,SrcSmall,imgFileSize);
+  var ImageHTMLBig=ImageHTMLForPreview(IdOfImgPreview,SrcBig,imgFileSize);
+  var DivHTML=DivHTMLForPreview(IdOfDiv,ImageHTML);
+
+  $('#'+IdOfDiv).html('');
+  $('#'+IdOfDiv).append(ImageHTML);
+  CreateDialogs(IdForImg,DivHTML,ImageHTMLBig,SrcBig);
+
+}
+
+
+
+function ImageHTMLForPreview(IdForImg,src,imgFileSize)
+{
+    var imaginside="<img id='"+IdForImg+"' src='"+src+"'></img> <br><p>"+imgFileSize+"</p>";
+    return imaginside;
+}
+
+function DivHTMLForPreview(IdOfDiv, HTMLOfImage)
+{
+
+  var htmlToAppend="<div id='div"+IdOfDiv+"' class='Previews'>"+HTMLOfImage+"</div>";
+  return htmlToAppend;
+}
+
+function app(canvas7, canvas6,image,iID)
+{
+  var drul = $ImagesTobeEditedArray[iID].GetSmallCanvas().toDataURL("image/jpeg");
+  var drul2 = $ImagesTobeEditedArray[iID].GetBigCanvas().toDataURL("image/jpeg");
+
+  var head = 'data:image/jpeg;base64,';
+  //var drul=canvas.toDataURL("image/jpeg");
+  var imgFileSize = Math.round((drul.length - head.length)*3/4) ;
+
+  var CompleteId="img"+iID;
+  var imaginside="<img id='"+CompleteId+"' src='"+drul+"'></img> <br><p>"+imgFileSize+"</p>";
+  var imaginside2="<img id='edit"+CompleteId+"' src='"+drul2+"'></img> <br><p>"+imgFileSize+"</p>";
+  var htmlToAppend="<div id='div"+CompleteId+"' class='Previews'>"+imaginside+"</div>";
+
+  $("#ShowUpPics").append(htmlToAppend);
+  CreateDialogs(CompleteId,htmlToAppend,imaginside2,drul2);
+
+
+
+}
+function appReplace(drul, drul2, idtobereplaced)
 {
   var head = 'data:image/jpeg;base64,';
   //var drul=canvas.toDataURL("image/jpeg");
   var imgFileSize = Math.round((drul.length - head.length)*3/4) ;
 
-var CompleteId="img"+iID;
-var imaginside="<img id='"+CompleteId+"' src='"+drul+"'></img> <br><p>"+imgFileSize+"</p>";
-var imaginside2="<img id='edit"+CompleteId+"' src='"+drul2+"'></img> <br><p>"+imgFileSize+"</p>";
-var htmlToAppend="<div id='div"+CompleteId+"' class='Previews'>"+imaginside+"</div>";
+  var CompleteId="img"+idtobereplaced;
+  var imaginside="<img id='"+CompleteId+"' src='"+drul+"'></img> <br><p>"+imgFileSize+"</p>";
+  var imaginside2="<img id='edit"+CompleteId+"' src='"+drul2+"'></img> <br><p>"+imgFileSize+"</p>";
+  var htmlToAppend="<div id='div"+CompleteId+"' class='Previews'>"+imaginside+"</div>";
 
-
-  $("#ShowUpPics").append(htmlToAppend);
+  $('#div'+CompleteId).html('');
+  $('#div'+CompleteId).append(imaginside);
+//$("#ShowUpPics").replace(htmlToAppend);
   CreateDialogs(CompleteId,htmlToAppend,imaginside2,drul2);
-  /*$("#img"+iID+"").click(function(){
-     $("#img"+iID+"").dialog();
-});*/
-//var val= $("#"+CompleteId, imaginside);
-  //$("#ShowUpPics").append("<p>"+imgFileSize+"</p>");
 
-  iID=(iID+1);
+  //iID=(iID+1);
 
 }
+
+
 
 function CreateDialogs(id, htmlToAppend, imaginside2, drul)
 {
@@ -283,23 +396,7 @@ function CreateDialogs(id, htmlToAppend, imaginside2, drul)
 var element=$("#"+id ).parent().attr('id');
 var $Cloned = $("#"+element).clone();
 var html = $("#"+element).html();
-        //$( "#"+element ).append(<dihtml );//.append($(this).html());
-        //$( ".Previews").append('');//.append($(this).html());
-        /*$( "#"+element).dialog({
-            resizable:false,
-            buttons: {
-                "Enrol": function()
-                {
-                    $(this).dialog('close');
-                    choice(true);
-                },
-                "Cancel Enrol": function()
-                {
-                    $(this).dialog('close');
-                    choice(false);
-                }
-            }
-        });*/
+
         var forid="edit"+id.trim();
 
         var $rimaginside2=imaginside2+'<br> Sharpen: <input type="range" id="mix" min="-200" max="200" value="0" oninput="update(\''+forid+'\')">';
@@ -323,18 +420,35 @@ $(".olddialog").remove();
           $(this).html($rimaginside2);
             },
           buttons: {
-            Ok: function() {
-            $( "#Editdialog" ).dialog( "close" );
+            Save: function() {
+
+
+              var $SwapId=id.replace("ImgPreview","");
+              var canvas = document.createElement('canvas');
+              canvas.width = $ImagesTobeEditedArray[$SwapId].GetTempSmallCanvas().width;
+              canvas.height = $ImagesTobeEditedArray[$SwapId].GetTempSmallCanvas().height;
+              var ctxValsmall = canvas.getContext("2d");
+              var ctxTempValsmall = $ImagesTobeEditedArray[$SwapId].GetTempSmallCanvas().getContext("2d");
+
+            ctxValsmall=sharpen(ctxTempValsmall,canvas.width,canvas.height, parseInt($ans1Value) * 0.01);
+            $ans1Value=NaN;
+            $ImagesTobeEditedArray[$SwapId].SetTempSmallCanvas(canvas);
+            //appReplace(  $ImagesTobeEditedArray[$SwapId].GetTempSmallCanvas().toDataURL("image/jpeg"), $ImagesTobeEditedArray[$SwapId].GetTempBigCanvas,$SwapId);
+            REcreatePreviews($SwapId);
+
+            $("#Editdialog" ).dialog( "close" );
             $("#Editdialog").dialog('destroy').remove();
             $("#Editdialog").empty();
             $("#Editdialog").remove();
-            //imaginside2='';
+
+
             }
           }
         });
 });
 });
 }
+var $ans1Value;
 
 function createCanvasForDialog(drul)
 {
@@ -351,15 +465,6 @@ img.onload = function() {
 };
 img.src = drul;
 }
-
-function pFileReader(file){
-  return new Promise((resolve, reject) => {
-    var fr = new FileReader();
-    fr.onload = resolve;  // CHANGE to whatever function you want which would eventually call resolve
-    fr.readAsDataURL(file);
-  });
-}
-
 
 function Resize(Res)
 {
@@ -394,7 +499,6 @@ function Resize(Res)
    //var jpegUrl = canvas.toDataURL("image/jpeg");
 }
 
-
 var ImageSizeMax = (function () {
     function ImageSizeMax(img, MaxSizeImg) {
         this.imge = img;
@@ -422,27 +526,31 @@ var ImageSizeMax = (function () {
     return ImageSizeMax;
 }());
 var $canvasSharp;
+var $canvasSharpSwap;
 function update(id)
 {
+
+  var str = "editImgPreview";
+  var IdOfArray = id.replace(str, "");
+
   var canvas = document.getElementById(id);
 
 
   var canvas7 = document.createElement('canvas');
-  canvas7.width = $canvasSharp.width;
-  canvas7.height = $canvasSharp.height;
+  canvas7.width = $ImagesTobeEditedArray[IdOfArray].GetBigCanvas().width;
+  canvas7.height = $ImagesTobeEditedArray[IdOfArray].GetBigCanvas().height;
   var ctx7 = canvas7.getContext("2d");
 
-
-    ctx7.drawImage($canvasSharp, 0, 0,$canvasSharp.width,$canvasSharp.height);
+    ctx7.drawImage($ImagesTobeEditedArray[IdOfArray].GetBigCanvas(), 0, 0,$ImagesTobeEditedArray[IdOfArray].GetBigCanvas().width,$ImagesTobeEditedArray[IdOfArray].GetBigCanvas().height);
     var ans1 = document.getElementById('mix');
     var vag=mix;
-    ctx7= sharpen(ctx7, $canvasSharp.width, $canvasSharp.height, parseInt(ans1.value) * 0.01);
+    $ans1Value=ans1.value;
+    ctx7= sharpen(ctx7, $ImagesTobeEditedArray[IdOfArray].GetBigCanvas().width, $ImagesTobeEditedArray[IdOfArray].GetBigCanvas().height, parseInt($ans1Value) * 0.01);
     //app(canvas7.toDataURL("image/jpeg"));
+     //$canvasSharpSwap=canvas7;
+     $ImagesTobeEditedArray[IdOfArray].SetTempBigCanvas(canvas7);
     canvas.src=canvas7.toDataURL("image/jpeg");
 }
-
-
-
 
 function sharpen(ctx, w, h, mix) {
 
@@ -498,74 +606,61 @@ function sharpen(ctx, w, h, mix) {
     return ctx;
 
 }
-/*
-/// naive and non-efficient implementation of update, but
-/// do illustrate the impact of sharpen after a downsample
-function resize() {
-
-    /// set canvas size proportional to original image
-    canvas.height = canvas.width * (img.height / img.width);
-
-    /// set off-screen canvas/sharpening source to same size
-    offScreen.width = canvas.width;
-    offScreen.height = canvas.height;
-
-    /// step 1 in down-scaling
-    var oc = document.createElement('canvas'),
-        octx = oc.getContext('2d');
-
-    oc.width = img.width * 0.5;
-    oc.height = img.height * 0.5;
-    octx.drawImage(img, 0, 0, oc.width, oc.height);
-
-    /// step 2
-    octx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5);
-
-    /// draw final result to screen canvas
-    ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
-    0, 0, canvas.width, canvas.height);
-
-    /// copy to off-screen to use as source for shapening
-    offctx.drawImage(canvas, 0, 0);
-
-    /// apply sharpening convolution
-    update();
-}
-
-/// adjustable sharpening - update cached source
-function update() {
-    ctx.drawImage(offScreen, 0, 0);
-    sharpen(ctx, canvas.width, canvas.height, parseInt(mix.value) * 0.01);
-}
-*/
 
 
-/*
-var ImageSizeMax=function (img)
-{
-  var Max=1200;
-  ImageSizeMax.height;
-  ImageSizeMax.width;
-  if((img.height>  Max)||(img.width>Max))
-  {
-    var DiffTimes;
-    if((img.height>img.width)||(img.height==img.width))
-    {
-      var DiffTimes=img.height/Max;
 
+
+var ImagesTobeEdited = (function () {
+    function ImagesTobeEdited(imge) {
+        this.ImageType = imge;
     }
-    else
-    {
-      var DiffTimes=img.width/Max;
-    }
-    this.height=img.height/DiffTimes;
-    this.width=img.width/DiffTimes;
-  }
-  else
-  {
-    this.height=img.height;
-    this.width=img.width;
-  }
-return ImageSizeMax;
-
-}*/
+    ImagesTobeEdited.prototype.SetImageId = function (id) {
+        this.imageId = id;
+    };
+    ImagesTobeEdited.prototype.SetFileName = function (Name) {
+        this.FileName = Name;
+    };
+    ImagesTobeEdited.prototype.GetFileName = function () {
+        return this.FileName;
+    };
+    ImagesTobeEdited.prototype.CreateSmallCanvas = function (canvas) {
+        this.CanvasSmall = canvas;
+    };
+    ImagesTobeEdited.prototype.CreateBigCanvas = function (canvas) {
+        this.CanvasBig = canvas;
+    };
+    ImagesTobeEdited.prototype.CreateCanvasCouple = function (CanvasSmall, Canvasbig) {
+        this.CanvasSmall = CanvasSmall;
+        this.CanvasBig = Canvasbig;
+    };
+    ImagesTobeEdited.prototype.CreateTempcanvas = function (CanvasSmall, Canvasbig) {
+        this.TempCanvasSmall = CanvasSmall;
+        this.TempCanvasBig = Canvasbig;
+    };
+    ImagesTobeEdited.prototype.GetBigCanvas = function () {
+        return this.CanvasBig;
+    };
+    ImagesTobeEdited.prototype.GetSmallCanvas = function () {
+        return this.CanvasSmall;
+    };
+    ImagesTobeEdited.prototype.GetTempBigCanvas = function () {
+        return this.TempCanvasBig;
+    };
+    ImagesTobeEdited.prototype.GetTempSmallCanvas = function () {
+        return this.TempCanvasSmall;
+    };
+    ImagesTobeEdited.prototype.SetTempBigCanvas = function (CanvasBig) {
+        this.TempCanvasBig = CanvasBig;
+    };
+    ImagesTobeEdited.prototype.SetTempSmallCanvas = function (CanvasSmal) {
+        this.TempCanvasSmall = CanvasSmal;
+    };
+    ImagesTobeEdited.prototype.GetImage = function () {
+        return this.ImageType;
+    };
+    ImagesTobeEdited.prototype.GetId = function () {
+        return this.imageId;
+    };
+    return ImagesTobeEdited;
+}());
+var $ImagesTobeEditedArray = []
